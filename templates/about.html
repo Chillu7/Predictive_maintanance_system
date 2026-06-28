@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="page-section">
+  <div class="page-shell">
+    <header class="section-header">
+      <p class="eyebrow">Model diagnostics</p>
+      <h1>About the Machine Learning Model</h1>
+      <p>Review the dataset, evaluation metrics, and model insights that drive the preventive maintenance predictions.</p>
+    </header>
+
+    <div class="stats-grid">
+      <article class="panel">
+        <h2>Dataset</h2>
+        <p>{{ dataset_name }}</p>
+        <p><strong>Records:</strong> {{ num_records }}</p>
+        <p><strong>Features:</strong> {{ num_features }}</p>
+      </article>
+      <article class="panel">
+        <h2>Target Variable</h2>
+        <p>{{ target_variable }}</p>
+        <p><strong>Algorithm:</strong> {{ algorithm }}</p>
+        <p><strong>ROC AUC:</strong> {{ roc_auc | round(4) }}</p>
+      </article>
+      <article class="panel">
+        <h2>Performance</h2>
+        <p><strong>Accuracy:</strong> {{ accuracy | round(4) }}</p>
+        <p><strong>Precision:</strong> {{ precision | round(4) }}</p>
+        <p><strong>Recall:</strong> {{ recall | round(4) }}</p>
+        <p><strong>F1 Score:</strong> {{ f1_score | round(4) }}</p>
+      </article>
+    </div>
+
+    <div class="chart-grid">
+      <article class="panel">
+        <h2>Confusion Matrix</h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th></th><th>Predicted 0</th><th>Predicted 1</th></tr>
+            </thead>
+            <tbody>
+              <tr><th>Actual 0</th><td>{{ confusion_matrix.tn }}</td><td>{{ confusion_matrix.fp }}</td></tr>
+              <tr><th>Actual 1</th><td>{{ confusion_matrix.fn }}</td><td>{{ confusion_matrix.tp }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Feature Importance</h2>
+        <div class="chart-box">
+          <canvas id="featureChart"></canvas>
+        </div>
+      </article>
+    </div>
+
+    <article class="panel chart-panel-wide">
+      <h2>ROC Curve</h2>
+      <div class="chart-box chart-box-wide">
+        <canvas id="rocChart"></canvas>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script>
+const featureNames = {{ feature_importances | map(attribute='name') | list | tojson }};
+const featureValues = {{ feature_importances | map(attribute='value') | list | tojson }};
+const rocFpr = {{ roc_data.fpr | tojson }};
+const rocTpr = {{ roc_data.tpr | tojson }};
+
+window.addEventListener('DOMContentLoaded', () => {
+  const featureCtx = document.getElementById('featureChart');
+  if (featureCtx) {
+    new Chart(featureCtx, {
+      type: 'bar',
+      data: {
+        labels: featureNames,
+        datasets: [{ label: 'Importance', data: featureValues, backgroundColor: 'rgba(31, 119, 180, 0.82)' }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { x: { ticks: { maxRotation: 45, minRotation: 45 } } }
+      }
+    });
+  }
+
+  const rocCtx = document.getElementById('rocChart');
+  if (rocCtx) {
+    new Chart(rocCtx, {
+      type: 'line',
+      data: {
+        labels: rocFpr,
+        datasets: [{ label: 'ROC Curve', data: rocTpr, borderColor: '#1f77b4', fill: false, tension: 0.2 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { title: { display: true, text: 'False Positive Rate' } },
+          y: { title: { display: true, text: 'True Positive Rate' } }
+        }
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

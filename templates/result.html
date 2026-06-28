@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="page-section">
+  <div class="page-shell result-layout">
+    <article class="panel result-panel">
+      <header class="result-header">
+        <div>
+          <p class="eyebrow">Assessment result</p>
+          <h1>Prediction Result</h1>
+          <p>Review the machine health assessment and recommended maintenance actions.</p>
+        </div>
+        <span class="risk-badge risk-badge-{{ risk_level | lower | replace(' ', '-') }}">{{ risk_level }}</span>
+      </header>
+
+      <div class="metric-grid">
+        <div class="status-card {% if health_status == 'Healthy' %}risk-healthy{% else %}risk-high{% endif %}">
+          <h2>Machine Health</h2>
+          <p class="metric-value {% if health_status == 'Healthy' %}value-good{% else %}value-danger{% endif %}">{{ health_status }}</p>
+        </div>
+        <div class="status-card">
+          <h2>Failure Prediction</h2>
+          <p class="metric-value small-value {% if prediction_text.startswith('Unlikely') %}value-good{% else %}value-danger{% endif %}">{{ prediction_text }}</p>
+        </div>
+        <div class="status-card">
+          <h2>Failure Probability</h2>
+          <div class="progress-meter" style="--meter-value: {{ failure_probability * 100 }}%;">
+            <span>{{ (failure_probability * 100) | round(1) }}%</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <h2>Confidence Score</h2>
+          <div class="progress-meter meter-info" style="--meter-value: {{ confidence_score * 100 }}%;">
+            <span>{{ (confidence_score * 100) | round(1) }}%</span>
+          </div>
+        </div>
+        <div class="status-card {% if risk_level == 'Healthy' %}risk-healthy{% elif risk_level == 'Low Risk' %}risk-low{% elif risk_level == 'Medium Risk' %}risk-medium{% elif risk_level == 'High Risk' %}risk-high{% else %}risk-critical{% endif %}">
+          <h2>Risk Level</h2>
+          <p class="metric-value small-value">{{ risk_level }}</p>
+        </div>
+      </div>
+
+      <section class="status-card recommendation-card {% if risk_level == 'Healthy' %}risk-healthy{% elif risk_level == 'Low Risk' %}risk-low{% elif risk_level == 'Medium Risk' %}risk-medium{% elif risk_level == 'High Risk' %}risk-high{% else %}risk-critical{% endif %}">
+        <h2>Maintenance Recommendation</h2>
+        <p>{{ recommendation }}</p>
+      </section>
+
+      <section class="status-card input-summary">
+        <h2>Machine Input Summary</h2>
+        <div class="summary-grid">
+          {% for key, value in user_input.items() %}
+          <div class="summary-item">
+            <span>{{ key.replace('_', ' ') }}</span>
+            <strong>{{ value }}</strong>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <form method="post" action="{{ url_for('download_report') }}" class="download-form">
+        {% for key, value in user_input.items() %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}" />
+        {% endfor %}
+        <input type="hidden" name="prediction" value="{{ prediction }}" />
+        <input type="hidden" name="prediction_text" value="{{ prediction_text }}" />
+        <input type="hidden" name="failure_probability" value="{{ failure_probability }}" />
+        <input type="hidden" name="confidence_score" value="{{ confidence_score }}" />
+        <input type="hidden" name="risk_level" value="{{ risk_level }}" />
+        <input type="hidden" name="recommendation" value="{{ recommendation }}" />
+        <input type="hidden" name="health_status" value="{{ health_status }}" />
+        <button type="submit" class="button button-primary">Download PDF Report</button>
+      </form>
+    </article>
+
+    <aside class="panel guide-panel">
+      <h2>Risk Guide</h2>
+      <ul class="plain-list">
+        <li><strong>Healthy:</strong> Normal operation, keep monitoring.</li>
+        <li><strong>Low Risk:</strong> Schedule routine inspection.</li>
+        <li><strong>Medium Risk:</strong> Plan preventive maintenance soon.</li>
+        <li><strong>High Risk:</strong> Inspect critical systems immediately.</li>
+        <li><strong>Critical:</strong> Halt operation and repair before restart.</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+{% endblock %}

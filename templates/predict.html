@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="page-section">
+  <div class="page-shell">
+    <header class="section-header">
+      <p class="eyebrow">Machine assessment</p>
+      <h1>Machine Failure Prediction</h1>
+      <p>Enter the machine parameters below to generate a preventive maintenance risk prediction.</p>
+    </header>
+
+    <form method="post" action="{{ url_for('result') }}" class="form-panel">
+      <div class="form-grid">
+        <div class="field-group">
+          <label for="Machine_Type">Machine Type</label>
+          <select id="Machine_Type" name="Machine_Type" required>
+            {% for choice in machine_types %}
+            <option value="{{ choice }}">{{ choice.replace('_', ' ') }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="Installation_Year">Installation Year</label>
+          <input id="Installation_Year" type="number" min="1990" max="2035" name="Installation_Year" placeholder="2024" required>
+        </div>
+        <div class="field-group">
+          <label for="Operational_Hours">Operational Hours</label>
+          <input id="Operational_Hours" type="number" min="0" name="Operational_Hours" placeholder="75000" required>
+        </div>
+        <div class="field-group">
+          <label for="Temperature_C">Temperature (deg C)</label>
+          <input id="Temperature_C" type="number" step="0.1" name="Temperature_C" placeholder="65.2" required>
+        </div>
+        <div class="field-group">
+          <label for="Vibration_mms">Vibration (mm/s)</label>
+          <input id="Vibration_mms" type="number" step="0.1" name="Vibration_mms" placeholder="12.5" required>
+        </div>
+        <div class="field-group">
+          <label for="Sound_dB">Sound Level (dB)</label>
+          <input id="Sound_dB" type="number" step="0.1" name="Sound_dB" placeholder="79.4" required>
+        </div>
+        <div class="field-group">
+          <label for="Oil_Level_pct">Oil Level (%)</label>
+          <input id="Oil_Level_pct" type="number" step="0.1" min="0" max="100" name="Oil_Level_pct" placeholder="58.0" required>
+        </div>
+        <div class="field-group">
+          <label for="Coolant_Level_pct">Coolant Level (%)</label>
+          <input id="Coolant_Level_pct" type="number" step="0.1" min="0" max="100" name="Coolant_Level_pct" placeholder="62.0" required>
+        </div>
+        <div class="field-group">
+          <label for="Power_Consumption_kW">Power Consumption (kW)</label>
+          <input id="Power_Consumption_kW" type="number" step="0.1" name="Power_Consumption_kW" placeholder="152.5" required>
+        </div>
+        <div class="field-group">
+          <label for="Last_Maintenance_Days_Ago">Last Maintenance (Days Ago)</label>
+          <input id="Last_Maintenance_Days_Ago" type="number" min="0" name="Last_Maintenance_Days_Ago" placeholder="45" required>
+        </div>
+        <div class="field-group">
+          <label for="Maintenance_History_Count">Maintenance History Count</label>
+          <input id="Maintenance_History_Count" type="number" min="0" name="Maintenance_History_Count" placeholder="4" required>
+        </div>
+        <div class="field-group">
+          <label for="Failure_History_Count">Failure History Count</label>
+          <input id="Failure_History_Count" type="number" min="0" name="Failure_History_Count" placeholder="1" required>
+        </div>
+        <div class="field-group">
+          <label for="AI_Supervision">AI Supervision</label>
+          <select id="AI_Supervision" name="AI_Supervision" required>
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="Error_Codes_Last_30_Days">Error Codes in Last 30 Days</label>
+          <input id="Error_Codes_Last_30_Days" type="number" min="0" name="Error_Codes_Last_30_Days" placeholder="3" required>
+        </div>
+        <div class="field-group">
+          <label for="Remaining_Useful_Life_days">Remaining Useful Life (Days)</label>
+          <input id="Remaining_Useful_Life_days" type="number" min="0" name="Remaining_Useful_Life_days" placeholder="120" required>
+        </div>
+        <div class="field-group">
+          <label for="Laser_Intensity">Laser Intensity</label>
+          <input id="Laser_Intensity" type="number" step="0.1" name="Laser_Intensity" placeholder="0.0" required>
+        </div>
+        <div class="field-group">
+          <label for="Hydraulic_Pressure_bar">Hydraulic Pressure (bar)</label>
+          <input id="Hydraulic_Pressure_bar" type="number" step="0.1" name="Hydraulic_Pressure_bar" placeholder="0.0" required>
+        </div>
+        <div class="field-group">
+          <label for="Coolant_Flow_L_min">Coolant Flow (L/min)</label>
+          <input id="Coolant_Flow_L_min" type="number" step="0.1" name="Coolant_Flow_L_min" placeholder="0.0" required>
+        </div>
+        <div class="field-group">
+          <label for="Heat_Index">Heat Index</label>
+          <input id="Heat_Index" type="number" step="0.1" name="Heat_Index" placeholder="42.0" required>
+        </div>
+        <div class="field-group">
+          <label for="AI_Override_Events">AI Override Events</label>
+          <input id="AI_Override_Events" type="number" min="0" name="AI_Override_Events" placeholder="1" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="button button-primary">Predict Failure Risk</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

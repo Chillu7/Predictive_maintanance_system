@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="hero-section">
+  <div class="page-shell hero-layout">
+    <div class="hero-copy">
+      <p class="eyebrow">Preventive maintenance dashboard</p>
+      <h1>Industrial Machine Failure Prediction</h1>
+      <p class="hero-lede">Predict machine failure within the next seven days using trained machine learning and operational sensor data.</p>
+      <div class="action-row">
+        <a href="{{ url_for('predict') }}" class="button button-light">Get Started</a>
+        <a href="{{ url_for('about') }}" class="button button-outline">Learn About the Model</a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <h2>Key Benefits</h2>
+      <ul class="check-list">
+        <li>Reduce unexpected downtime</li>
+        <li>Optimize maintenance planning</li>
+        <li>Improve equipment reliability</li>
+        <li>Generate professional PDF reports</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="page-section">
+  <div class="page-shell">
+    <div class="feature-grid">
+      <article class="feature-panel feature-blue">
+        <span class="panel-kicker">Prediction</span>
+        <h3>Real-Time Prediction</h3>
+        <p>Enter machine parameters and get an instant failure risk prediction.</p>
+      </article>
+      <article class="feature-panel feature-orange">
+        <span class="panel-kicker">Diagnostics</span>
+        <h3>ML Diagnostics</h3>
+        <p>Explore accuracy, confusion matrix, ROC curve, and feature impact.</p>
+      </article>
+      <article class="feature-panel feature-green">
+        <span class="panel-kicker">Reports</span>
+        <h3>PDF Reporting</h3>
+        <p>Export professional maintenance reports for stakeholders.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="page-section surface-section">
+  <div class="page-shell split-layout">
+    <div>
+      <p class="eyebrow">Built for shop-floor decisions</p>
+      <h2>Preventive Maintenance Made Practical</h2>
+      <p>Support maintenance engineers, production managers, and technicians with data-driven insights to schedule service and avoid costly breakdowns.</p>
+    </div>
+    <div class="mini-grid">
+      <article class="info-box accent-blue">
+        <h3>Predictive Accuracy</h3>
+        <p>Use historical machine data to identify risk before a failure occurs.</p>
+      </article>
+      <article class="info-box accent-orange">
+        <h3>No Database Required</h3>
+        <p>Works entirely from the trained model and the supplied dataset.</p>
+      </article>
+      <article class="info-box accent-green">
+        <h3>Modern Interface</h3>
+        <p>Responsive custom interface designed for industrial users.</p>
+      </article>
+      <article class="info-box accent-red">
+        <h3>Insightful Recommendations</h3>
+        <p>Receive tailored maintenance actions for every risk level.</p>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

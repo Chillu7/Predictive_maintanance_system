@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+.env
+.venv/
+venv/
+model.pkl
+preprocessor.pkl
+*.json
