@@ -6,6 +6,7 @@ from datetime import datetime
 import joblib
 import numpy as np
 import pandas as pd
+from eda_analysis import generate_eda_graphs, generate_model_evaluation_graphs
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (accuracy_score, classification_report,
@@ -18,6 +19,7 @@ DATA_PATH = "accepted_datasets_cleaned.csv"
 MODEL_PATH = "model.pkl"
 PREPROCESSOR_PATH = "preprocessor.pkl"
 INFO_PATH = "model_info.json"
+GRAPH_DIR = "graphs"
 
 
 def load_dataset(path):
@@ -167,8 +169,16 @@ def main():
     df = load_dataset(DATA_PATH)
     print(f"Dataset loaded with {len(df)} records.")
 
+    print("Running exploratory data analysis and generating graphs...")
+    df = generate_eda_graphs(
+        df,
+        graph_dir=GRAPH_DIR,
+        clean_existing=True,
+        remove_outliers=True,
+    )
+
     df = clean_dataset(df)
-    print(f"Cleaned dataset has {len(df)} records after preprocessing.")
+    print(f"Cleaned dataset has {len(df)} records after EDA preprocessing.")
 
     artifacts = build_model(df)
     model = artifacts["model"]
@@ -198,9 +208,16 @@ def main():
     }
 
     save_artifacts(model, preprocessor, info)
+    generate_model_evaluation_graphs(
+        info["feature_importances"],
+        metrics["confusion_matrix"],
+        metrics["roc_curve"],
+        graph_dir=GRAPH_DIR,
+    )
     print(f"Model saved to {MODEL_PATH}")
     print(f"Preprocessor saved to {PREPROCESSOR_PATH}")
     print(f"Model info saved to {INFO_PATH}")
+    print(f"EDA and model graphs saved to {GRAPH_DIR}")
 
 
 if __name__ == "__main__":

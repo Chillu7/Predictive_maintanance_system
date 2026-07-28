@@ -554,6 +554,41 @@ p {
   margin-top: 20px;
 }
 
+.eda-gallery-section {
+  margin-top: 34px;
+}
+
+.compact-header {
+  margin-bottom: 24px;
+}
+
+.compact-header h1 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
+.eda-gallery-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.graph-panel {
+  box-shadow: none;
+}
+
+.graph-panel h2 {
+  min-height: 2.6em;
+}
+
+.graph-panel img {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
 .chart-box {
   height: 330px;
   min-width: 0;
@@ -627,7 +662,8 @@ p {
   .hero-layout,
   .split-layout,
   .result-layout,
-  .chart-grid {
+  .chart-grid,
+  .eda-gallery-grid {
     grid-template-columns: 1fr;
   }
 

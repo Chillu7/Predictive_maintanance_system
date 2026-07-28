@@ -60,6 +60,32 @@
         <canvas id="rocChart"></canvas>
       </div>
     </article>
+
+    <section class="eda-gallery-section">
+      <div class="section-header compact-header">
+        <p class="eyebrow">Exploratory data analysis</p>
+        <h1>Generated Analysis Graphs</h1>
+        <p>Saved PNG outputs from dataset profiling, univariate analysis, feature relationships, and model evaluation.</p>
+      </div>
+
+      {% if graph_images %}
+      <div class="eda-gallery-grid">
+        {% for graph in graph_images %}
+        <article class="panel graph-panel">
+          <h2>{{ graph.title }}</h2>
+          <a href="{{ url_for('graph_file', filename=graph.filename) }}" target="_blank" rel="noopener">
+            <img src="{{ url_for('graph_file', filename=graph.filename) }}" alt="{{ graph.title }}">
+          </a>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <article class="panel">
+        <h2>No EDA Graphs Found</h2>
+        <p>Run <strong>py train_model.py</strong> or <strong>py eda_analysis.py</strong> to generate PNG graphs in the graphs folder.</p>
+      </article>
+      {% endif %}
+    </section>
   </div>
 </section>
 

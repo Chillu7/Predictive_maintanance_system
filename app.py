@@ -10,7 +10,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
-from flask import Flask, flash, redirect, render_template, request, send_file, url_for
+from flask import Flask, flash, redirect, render_template, request, send_file, send_from_directory, url_for
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "maintenance-system-secret")
@@ -18,6 +18,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "maintenance-system-secret")
 MODEL_PATH = "model.pkl"
 PREPROCESSOR_PATH = "preprocessor.pkl"
 INFO_PATH = "model_info.json"
+GRAPH_DIR = "graphs"
 
 if not os.path.exists(MODEL_PATH) or not os.path.exists(INFO_PATH) or not os.path.exists(PREPROCESSOR_PATH):
     raise RuntimeError(
@@ -99,6 +100,29 @@ CATEGORICAL_OPTIONS = model_info.get("machine_types", [
 ])
 
 BOOLEAN_OPTIONS = ["True", "False"]
+
+
+def humanize_graph_title(filename):
+    title = os.path.splitext(filename)[0].replace("_", " ").title()
+    return title.replace("Roc", "ROC").replace("Iqr", "IQR")
+
+
+def get_graph_images():
+    if not os.path.isdir(GRAPH_DIR):
+        return []
+
+    graph_files = sorted(
+        file_name
+        for file_name in os.listdir(GRAPH_DIR)
+        if file_name.lower().endswith(".png")
+    )
+    return [
+        {
+            "filename": file_name,
+            "title": humanize_graph_title(file_name),
+        }
+        for file_name in graph_files
+    ]
 
 
 def parse_numeric(value):
@@ -267,7 +291,13 @@ def about():
         confusion_matrix=confusion,
         feature_importances=feature_importances,
         roc_data=roc_data,
+        graph_images=get_graph_images(),
     )
+
+
+@app.route("/graphs/<path:filename>")
+def graph_file(filename):
+    return send_from_directory(GRAPH_DIR, filename)
 
 
 @app.route("/predict", methods=["GET"])
